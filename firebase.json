@@ -1,6 +1,7 @@
 {
   "hosting": {
-    "public": "frontend/public",
+    "site": "genai-apac-2026-491004",
+    "public": "frontend/out",
     "ignore": [
       "firebase.json",
       "**/.*",
