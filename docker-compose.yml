@@ -1,0 +1,60 @@
+version: "3.9"
+
+# ============================================================
+# PragmaLogixAI — Local Development docker-compose
+#
+# Starts:
+#   - PostgreSQL 16 with pgvector
+#   - FastAPI backend (hot-reload via volume mount)
+#
+# Usage:
+#   docker compose up
+#   (frontend: run `npm run dev` separately from /frontend)
+# ============================================================
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: pragmalogix_db
+    environment:
+      POSTGRES_DB: pragmalogix
+      POSTGRES_USER: pragmalogix
+      POSTGRES_PASSWORD: devpassword_change_in_prod
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./graph/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pragmalogix"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: pragmalogix_backend
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://pragmalogix:devpassword_change_in_prod@postgres:5432/pragmalogix
+      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT:-YOUR_GCP_PROJECT}
+      GOOGLE_CLOUD_LOCATION: ${GOOGLE_CLOUD_LOCATION:-us-central1}
+      BIGQUERY_DATASET: ${BIGQUERY_DATASET:-pragmalogix}
+      GCS_STAGING_BUCKET: ${GCS_STAGING_BUCKET:-pragmalogixai-staging}
+      ALLOWED_ORIGINS: "http://localhost:3000"
+      PORT: "8080"
+      GOOGLE_APPLICATION_CREDENTIALS: /gcp-adc.json
+    volumes:
+      # Mount application source for local dev (not for prod)
+      - .:/app
+      # Mount GCP Application Default Credentials for local GCP calls
+      - ${GOOGLE_APPLICATION_CREDENTIALS_PATH:-~/.config/gcloud/application_default_credentials.json}:/gcp-adc.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
