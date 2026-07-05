@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "genai-apac-2026-491004",
+    "site": "pragmalogixai-app",
     "public": ".firebase-public",
     "ignore": [
       "firebase.json",
