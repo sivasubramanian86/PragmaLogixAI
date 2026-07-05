@@ -26,7 +26,11 @@ async def get_multimodal_audio(summary: str = Query("Plan summary", description=
     Stream synthesized audio summary voice-over.
     """
     audio_bytes = generate_chirp_audio(summary)
-    return Response(content=audio_bytes, media_type="audio/wav")
+    return Response(
+        content=audio_bytes,
+        media_type="audio/wav",
+        headers={"Content-Disposition": "inline; filename=plan-summary.wav"},
+    )
 
 @router.get("/api/v1/multimodal/video")
 async def get_multimodal_video():

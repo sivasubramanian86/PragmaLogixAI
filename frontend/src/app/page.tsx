@@ -88,13 +88,13 @@ export default function DashboardPage() {
 
   // Navigation Links configuration
   const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: "💻" },
-    { id: "features", label: "Capabilities", icon: "⚡" },
-    { id: "about", label: "Architecture", icon: "🧬" },
-    { id: "faq", label: "FAQ", icon: "❓" },
-    { id: "help", label: "User Guide", icon: "📚" },
-    { id: "settings", label: "Settings", icon: "⚙️" },
-  ] as const;
+    { id: "dashboard" as NavSection, label: t.nav.dashboard, icon: "💻" },
+    { id: "features" as NavSection, label: t.nav.features, icon: "⚡" },
+    { id: "about" as NavSection, label: t.nav.about, icon: "🧬" },
+    { id: "faq" as NavSection, label: t.nav.faq, icon: "❓" },
+    { id: "help" as NavSection, label: t.nav.help, icon: "📚" },
+    { id: "settings" as NavSection, label: t.nav.settings, icon: "⚙️" },
+  ];
 
   return (
     <main
@@ -261,52 +261,41 @@ export default function DashboardPage() {
               pipelineState={pipelineState}
               planResult={planResult}
               isSimpleMode={isSimpleMode}
-              onSelectSuggestion={(query: string) => {
-                if (query.toLowerCase().includes("fatigue") || query.toLowerCase().includes("work")) {
-                  setActiveTab(0);
-                } else if (query.toLowerCase().includes("subscription") || query.toLowerCase().includes("friction")) {
+              onSelectSuggestion={async (query: string) => {
+                // Route to correct journey tab
+                let journey: Journey = "tomorrow";
+                if (query.toLowerCase().includes("subscription") || query.toLowerCase().includes("friction")) {
                   setActiveTab(1);
-                } else {
+                  journey = "month";
+                } else if (query.toLowerCase().includes("logistics") || query.toLowerCase().includes("home") || query.toLowerCase().includes("routine")) {
                   setActiveTab(2);
+                  journey = "home";
+                } else {
+                  setActiveTab(0);
+                  journey = "tomorrow";
                 }
-                setPipelineState("done");
-                setPlanResult({
-                  task_id: "SIM-2026-MOCK-07",
-                  status: "SUCCESS",
-                  age_group: profile,
-                  journey: query.toLowerCase().includes("fatigue") ? "tomorrow" : query.toLowerCase().includes("subscription") ? "month" : "home",
-                  daily_plan: [
-                    { hour: "08:00", task: "Cortisol-aligned light exposure & hydration", energy_cost: 1 },
-                    { hour: "09:30", task: "Cognitive deep-work focus window block", energy_cost: 4 },
-                    { hour: "14:00", task: "Logistics, chore routing & appliance check-in", energy_cost: 2 },
-                    { hour: "21:30", task: "Winding down, zero blue-light exposure", energy_cost: 1 },
-                  ],
-                  friction_budget_actions: [
-                    "Flagged duplicate SaaS account renewal on 8th of this month",
-                    "Flagged 45 mins screen time fatigue from notification spam",
-                    "AC filter cleaning trigger recommended to save 12% power cost",
-                  ],
-                  life_diffs: [
-                    "- Removed duplicate SaaS trial account (-$14.99/mo)",
-                    "- Scheduled AC routine filter check-in (+12% efficiency)",
-                  ],
-                  lint_warnings: [
-                    "Attention cost limit warning: cognitive tasks sum is close to demographic threshold (7/9)",
-                  ],
-                  specialist_reports: {
-                    "HealthEnergyAgent": "Health: tracked reported sleep and fatigue values. Suggested shift in caffeine intake.",
-                    "MindFocusAgent": "Mind: scheduled 90-min deep work blocks inside your peak efficiency window.",
-                    "FinanceWorkAgent": "Finance: detected subscription micro-leaks ($14.99/mo duplicate trial).",
-                    "LogisticsHomeAgent": "Logistics: scheduled routine filter and appliance maintenance checks.",
-                    "ProfessionalCareerAgent": "Professional: aligned schedule to avoid multitasking overlap.",
-                  },
-                  cache_hit: false,
-                  multimodal_outcomes: {
-                    image_url: `/api/v1/multimodal/image?prompt=${encodeURIComponent(query)}`,
-                    audio_url: `/api/v1/multimodal/audio?summary=Optimised%20decision%20plan%20constructed%20successfully`,
-                    video_url: `/api/v1/multimodal/video`
-                  }
-                });
+
+                // Run the real pipeline
+                setIsProcessing(true);
+                setErrorMsg(null);
+                setPipelineState("running");
+                setPlanResult(null);
+
+                try {
+                  const planRes = await plan(journey, {
+                    user_id: `user_${profile}`,
+                    query,
+                    age_group: profile,
+                  });
+                  setPlanResult(planRes);
+                  setPipelineState("done");
+                } catch (err: unknown) {
+                  const msg = err instanceof Error ? err.message : "Unknown error";
+                  setErrorMsg(msg);
+                  setPipelineState("idle");
+                } finally {
+                  setIsProcessing(false);
+                }
               }}
             />
           </>

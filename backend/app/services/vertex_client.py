@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Model identifiers (pinned for hackathon reproducibility)
 # ---------------------------------------------------------------------------
-_FLASH_LITE_MODEL = "gemini-2.5-flash"   # Fast ingestion / routing
+_FLASH_LITE_MODEL = "gemini-2.5-flash-lite-preview-06-17"   # Fast ingestion / routing
 _PRO_MODEL = "gemini-2.5-pro"                 # Deep reasoning / synthesis
 
 

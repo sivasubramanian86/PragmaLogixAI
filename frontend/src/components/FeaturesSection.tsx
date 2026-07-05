@@ -40,39 +40,6 @@ export default function FeaturesSection() {
     },
   ];
 
-  const criteria = [
-    {
-      name: "Solution Quality & Functionality",
-      score: "100%",
-      detail: "Multimodal parsing, parallel ADK agent mesh processing, and real-time planning outcomes.",
-      weight: "20%",
-    },
-    {
-      name: "Architecture & Technical Execution",
-      score: "100%",
-      detail: "Clean modular router setup, PostgreSQL/pgvector graph, and semantic query caching.",
-      weight: "20%",
-    },
-    {
-      name: "Impact & Use Case Relevance",
-      score: "100%",
-      detail: "Targets direct everyday friction (circadian, sub leak, logistics) across 3 demographics in 22 languages.",
-      weight: "20%",
-    },
-    {
-      name: "Technical Choices & Feasibility",
-      score: "100%",
-      detail: "Uses stable Vertex AI API models (Gemini 1.5), ADC credential architecture, and Cloud Run templates.",
-      weight: "20%",
-    },
-    {
-      name: "Demo, UX & Presentation",
-      score: "100%",
-      detail: "Sleek glassmorphism, background ambient glow vectors, interactive agent mesh topologies, and CLI debug console.",
-      weight: "20%",
-    },
-  ];
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem", animation: "fadeIn 0.3s ease" }}>
       
@@ -114,43 +81,8 @@ export default function FeaturesSection() {
         ))}
       </div>
 
-      {/* ── Hackathon Evaluation Alignment Card (Extraordinary Highlight) ── */}
-      <div className="card" style={{ border: "1px solid var(--accent-primary)", background: "oklch(14% 0.025 260 / 0.8)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
-          <span style={{ fontSize: "1.5rem" }}>🏆</span>
-          <div>
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--accent-primary)" }}>
-              Hackathon Evaluation Alignment
-            </h3>
-            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-              Direct mapping of PragmaLogixAI design choices to official judging rubrics
-            </p>
-          </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          {criteria.map((c, idx) => (
-            <div key={idx} style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.25rem",
-              paddingBottom: "0.75rem",
-              borderBottom: idx < criteria.length - 1 ? "1px solid var(--border-subtle)" : "none"
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem" }}>
-                <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>
-                  {c.name} (Weight: {c.weight})
-                </span>
-                <span style={{ fontWeight: 800, color: "var(--accent-teal)", backgroundColor: "oklch(68% 0.18 185 / 0.15)", padding: "0.15rem 0.5rem", borderRadius: "10px", fontSize: "0.75rem" }}>
-                  Verified {c.score}
-                </span>
-              </div>
-              <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", lineHeight: 1.3 }}>
-                {c.detail}
-              </p>
-            </div>
-          ))}
-        </div>
+      <div style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.5rem" }}>
+        Powered by Vertex AI · Gemini 2.5 Pro · Gemini 2.5 Flash-Lite · Imagen 3 · Cloud Run · BigQuery
       </div>
 
     </div>

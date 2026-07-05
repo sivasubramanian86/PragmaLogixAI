@@ -53,18 +53,71 @@ def generate_imagen_diagram(prompt: str) -> bytes:
 
 def generate_chirp_audio(summary: str) -> bytes:
     """
-    Synthesizes a text-to-speech audio update summary using Vertex AI/Google Cloud TTS.
-    Falls back to a pre-recorded mock audio stream if APIs are offline.
+    Synthesizes a text-to-speech audio summary using Google Cloud Text-to-Speech (Chirp HD voice).
+    Falls back to a minimal silent WAV if the API is unavailable.
     """
-    # Standard fallback audio stream (synthesized mock wav header with 0 bytes to prevent crash)
-    # A standard 44-byte WAV header for mono 8kHz 8-bit PCM containing silence.
+    try:
+        from google.cloud import texttospeech
+        client = texttospeech.TextToSpeechClient()
+        synthesis_input = texttospeech.SynthesisInput(text=summary[:500])
+        # Chirp HD — Journey voice, highest quality
+        voice = texttospeech.VoiceSelectionParams(
+            language_code="en-US",
+            name="en-US-Journey-F",
+        )
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.LINEAR16,
+        )
+        response = client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+        logger.info("Chirp TTS synthesis succeeded (%d bytes)", len(response.audio_content))
+        return response.audio_content
+    except ImportError:
+        logger.warning("google-cloud-texttospeech not installed — returning silent WAV stub.")
+    except Exception as exc:
+        logger.warning("Chirp TTS synthesis failed, returning silent WAV stub: %s", exc)
+
+    # Minimal valid silent WAV (44-byte header + 0 PCM bytes)
     wav_header = b'RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00@\x1f\x00\x00@\x1f\x00\x00\x01\x00\x08\x00data\x00\x00\x00\x00'
     return wav_header
 
 def generate_veo_video() -> bytes:
     """
-    Simulates a dynamic 3D decision outcome preview rendering (using Veo/mock stream).
+    Generates a short life-decision outcome preview video using Veo 2 on Vertex AI.
+    Falls back to a minimal WebM placeholder if the API is unavailable.
     """
-    # Lightweight WebM file structure placeholder to allow standard browser rendering
+    try:
+        import vertexai
+        from vertexai.preview.vision_models import VideoGenerationModel
+        import os, time
+
+        project = os.environ.get("GOOGLE_CLOUD_PROJECT", "genai-apac-2026-491004")
+        location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+        vertexai.init(project=project, location=location)
+
+        model = VideoGenerationModel.from_pretrained("veo-2.0-generate-001")
+        operation = model.generate_video(
+            prompt="A futuristic life planning dashboard with glowing agent nodes, showing a daily schedule optimized by AI. Dark theme, neon accents, 3-second loop.",
+            duration_seconds=3,
+            aspect_ratio="16:9",
+        )
+        # Poll with timeout
+        deadline = time.time() + 60
+        while not operation.done() and time.time() < deadline:
+            time.sleep(5)
+
+        if operation.done() and not operation.cancelled():
+            videos = operation.result().videos
+            if videos:
+                video_bytes = videos[0].video_bytes
+                logger.info("Veo 2 video generation succeeded (%d bytes)", len(video_bytes))
+                return video_bytes
+    except ImportError:
+        logger.warning("vertexai VideoGenerationModel not available — returning WebM stub.")
+    except Exception as exc:
+        logger.warning("Veo 2 generation failed, returning WebM stub: %s", exc)
+
+    # Minimal WebM placeholder
     webm_placeholder = b'\x1a\x45\xdf\xa3\x93\x42\x82\x88\x6d\x61\x74\x72\x6f\x73\x6b\x61'
     return webm_placeholder

@@ -23,6 +23,14 @@ export interface Strings {
   ingestSummary:       string;
   profiles:            Record<AgeGroup, string>;
   languages:           Record<Language, string>;
+  nav: {
+    dashboard: string;
+    features: string;
+    about: string;
+    faq: string;
+    help: string;
+    settings: string;
+  };
 }
 
 // Complete list of native names for dropdown selection
@@ -69,7 +77,15 @@ const baseEn: Strings = {
   profileLabel: "Select Profile Role",
   ingestSummary: "Life Signal Processed",
   profiles: { student: "Kid / Student", adult: "Working Professional", senior: "Elderly / Retired" },
-  languages: languageNames
+  languages: languageNames,
+  nav: {
+    dashboard: "Dashboard",
+    features: "Capabilities",
+    about: "Architecture",
+    faq: "FAQ",
+    help: "User Guide",
+    settings: "Settings",
+  },
 };
 
 const translations: Record<Language, Strings> = {
@@ -212,7 +228,20 @@ const translations: Record<Language, Strings> = {
     generatePlan: "योजना बनाएं",
     profileLabel: "प्रोफ़ाइल भूमिका चुनें",
     ingestSummary: "जीवन संकेत संसाधित",
-    profiles: { student: "बच्चे / छात्र", adult: "काम करने वाले पेशेवर", senior: "बुजुर्ग / सेवानिवृत्त" }
+    hourlySchedule: "घंटेवार शेड्यूल",
+    frictionActions: "घर्षण कम करने के कार्य",
+    lifeDiffs: "जीवन परिवर्तन (वृद्धिशील बदलाव)",
+    lintWarnings: "योजना की जाँच (लिंटर)",
+    activeSubscriptions: "सक्रिय सदस्यताएं",
+    profiles: { student: "बच्चे / छात्र", adult: "काम करने वाले पेशेवर", senior: "बुजुर्ग / सेवानिवृत्त" },
+    nav: {
+      dashboard: "डैशबोर्ड",
+      features: "क्षमताएं",
+      about: "आर्किटेक्चर",
+      faq: "सामान्य प्रश्न",
+      help: "उपयोगकर्ता गाइड",
+      settings: "सेटिंग्स",
+    },
   },
   ta: {
     ...baseEn,
@@ -226,7 +255,20 @@ const translations: Record<Language, Strings> = {
     generatePlan: "திட்டத்தை உருவாக்கு",
     profileLabel: "சுயவிவரப் பாத்திரத்தைத் தேர்ந்தெடுக்கவும்",
     ingestSummary: "வாழ்க்கை சமிக்ஞை செயலாக்கப்பட்டது",
-    profiles: { student: "குழந்தை / மாணவர்", adult: "வேலை செய்யும் தொழில்முறை", senior: "முதியவர் / ஓய்வு பெற்றவர்" }
+    hourlySchedule: "மணிநேர அட்டவணை",
+    frictionActions: "தடை குறைப்பு நடவடிக்கைகள்",
+    lifeDiffs: "வாழ்க்கை மாற்றங்கள்",
+    lintWarnings: "திட்ட சரிபார்ப்பு",
+    activeSubscriptions: "செயலில் உள்ள சந்தாக்கள்",
+    profiles: { student: "குழந்தை / மாணவர்", adult: "வேலை செய்யும் தொழில்முறை", senior: "முதியவர் / ஓய்வு பெற்றவர்" },
+    nav: {
+      dashboard: "டாஷ்போர்டு",
+      features: "திறன்கள்",
+      about: "கட்டமைப்பு",
+      faq: "அடிக்கடி கேட்கப்படும் கேள்விகள்",
+      help: "பயனர் வழிகாட்டி",
+      settings: "அமைப்புகள்",
+    },
   },
   kn: {
     ...baseEn,
@@ -240,7 +282,20 @@ const translations: Record<Language, Strings> = {
     generatePlan: "ಯೋಜನೆ ರೂಪಿಸಿ",
     profileLabel: "ಪ್ರೊಫೈಲ್ ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
     ingestSummary: "ಜೀವನ ಸಂಕೇತ ಸಂಸ್ಕರಿಸಲಾಗಿದೆ",
-    profiles: { student: "ಮಕ್ಕಳು / ವಿದ್ಯಾರ್ಥಿ", adult: "ಉದ್ಯೋಗಿ ವೃತ್ತಿಪರ", senior: "ಹಿರಿಯರು / ನಿವೃತ್ತರು" }
+    hourlySchedule: "ಗಂಟೆಯ ವೇಳಾಪಟ್ಟಿ",
+    frictionActions: "ಘರ್ಷಣೆ ಕಡಿಮೆ ಮಾಡುವ ಕ್ರಮಗಳು",
+    lifeDiffs: "ಜೀವನ ಬದಲಾವಣೆಗಳು",
+    lintWarnings: "ಯೋಜನೆ ಪರಿಶೀಲನೆ",
+    activeSubscriptions: "ಸಕ್ರಿಯ ಚಂದಾದಾರಿಕೆಗಳು",
+    profiles: { student: "ಮಕ್ಕಳು / ವಿದ್ಯಾರ್ಥಿ", adult: "ಉದ್ಯೋಗಿ ವೃತ್ತಿಪರ", senior: "ಹಿರಿಯರು / ನಿವೃತ್ತರು" },
+    nav: {
+      dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+      features: "ಸಾಮರ್ಥ್ಯಗಳು",
+      about: "ಆರ್ಕಿಟೆಕ್ಚರ್",
+      faq: "ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು",
+      help: "ಬಳಕೆದಾರ ಮಾರ್ಗದರ್ಶಿ",
+      settings: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    },
   },
   te: {
     ...baseEn,
@@ -254,7 +309,20 @@ const translations: Record<Language, Strings> = {
     generatePlan: "ప్లాన్ సృష్టించు",
     profileLabel: "ప్రొఫైల్ పాత్రను ఎంచుకోండి",
     ingestSummary: "సిగ్నల్ విజయవంతంగా విశ్లేషించబడింది",
-    profiles: { student: "పిల్లవాడు / విద్యార్థి", adult: "ఉద్యోగి / నిపుణుడు", senior: "పెద్దలు / విశ్రాంత ఉద్యోగి" }
+    hourlySchedule: "గంటల వారీ షెడ్యూల్",
+    frictionActions: "అవరోధం తగ్గించే చర్యలు",
+    lifeDiffs: "జీవిత మార్పులు",
+    lintWarnings: "ప్లాన్ తనిఖీ",
+    activeSubscriptions: "క్రియాశీల సభ్యత్వాలు",
+    profiles: { student: "పిల్లవాడు / విద్యార్థి", adult: "ఉద్యోగి / నిపుణుడు", senior: "పెద్దలు / విశ్రాంత ఉద్యోగి" },
+    nav: {
+      dashboard: "డాష్‌బోర్డ్",
+      features: "సామర్థ్యాలు",
+      about: "నిర్మాణం",
+      faq: "తరచుగా అడిగే ప్రశ్నలు",
+      help: "వినియోగదారు గైడ్",
+      settings: "సెట్టింగులు",
+    },
   },
   ar: {
     ...baseEn,

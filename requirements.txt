@@ -23,6 +23,7 @@ google-cloud-aiplatform>=1.60.0    # includes vertexai SDK for Gemini models
 google-cloud-storage>=2.16.0       # GCS for multimodal file staging
 google-cloud-bigquery>=3.20.0      # BigQuery analytics writes
 google-cloud-secret-manager>=2.20.0  # Secret Manager for DB credentials
+google-cloud-texttospeech>=2.16.0    # Cloud TTS (Chirp HD / Journey voice)
 
 # HTTP client (async — used by FastAPI test client & internal calls)
 httpx>=0.27.0
