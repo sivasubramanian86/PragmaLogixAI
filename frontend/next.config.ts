@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Required for Cloud Run Dockerfile (copies .next/standalone)
+  output: "standalone",
   // Allow backend API calls from the browser during local development
   async rewrites() {
     return [
