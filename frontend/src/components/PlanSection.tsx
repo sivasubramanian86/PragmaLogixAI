@@ -359,92 +359,106 @@ export default function PlanSection({
       {/* ── Multimodal Decision Synthesis (Imagen, Chirp, Veo) ── */}
       {planResult.multimodal_outcomes && (
         <div className="card" style={{ borderLeft: "4px solid var(--accent-amber)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.25rem" }}>
-            <span style={{ fontSize: "1.2rem" }}>🎬</span>
-            <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--accent-amber)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-              Multimodal Decision Synthesis
-            </h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }}>
+            <span style={{ fontSize: "1.4rem" }}>🎬</span>
+            <div>
+              <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--accent-amber)", textTransform: "uppercase", letterSpacing: "0.5px", margin: 0 }}>
+                Multimodal Decision Synthesis
+              </h3>
+              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", margin: "0.2rem 0 0" }}>
+                AI-generated visual · audio · video plan overview powered by Vertex AI
+              </p>
+            </div>
           </div>
-          
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-            {/* Imagen 3 Generated Image */}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+
+            {/* ── Imagen 3 — full-width prominent display ── */}
             {planResult.multimodal_outcomes.image_url && (
               <div>
-                <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.5rem" }}>
-                  🖼️ Imagen 3 Generated Decision Diagram
-                </p>
-                <img
-                  src={planResult.multimodal_outcomes.image_url}
-                  alt="Imagen 3 Decision Diagram"
-                  style={{
-                    width: "100%",
-                    maxHeight: "300px",
-                    objectFit: "contain",
-                    borderRadius: "var(--radius-sm)",
-                    border: "1px solid var(--border-subtle)",
-                    backgroundColor: "oklch(10% 0.02 260)",
-                  }}
-                />
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
+                  <span style={{ fontSize: "1rem" }}>🖼️</span>
+                  <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--accent-amber)", margin: 0 }}>
+                    Imagen 3 — Decision Diagram
+                  </p>
+                  <span style={{ fontSize: "0.68rem", color: "var(--text-muted)", backgroundColor: "oklch(75% 0.19 85 / 0.1)", padding: "0.15rem 0.5rem", borderRadius: "10px", fontWeight: 600 }}>
+                    Vertex AI · Generative Image
+                  </span>
+                </div>
+                <div style={{
+                  borderRadius: "var(--radius-md)",
+                  overflow: "hidden",
+                  border: "1px solid oklch(75% 0.19 85 / 0.3)",
+                  backgroundColor: "oklch(10% 0.02 260)",
+                  boxShadow: "0 4px 24px oklch(0% 0 0 / 0.5)",
+                }}>
+                  <img
+                    src={planResult.multimodal_outcomes.image_url}
+                    alt="Imagen 3 Decision Diagram"
+                    style={{
+                      width: "100%",
+                      height: "420px",
+                      objectFit: "contain",
+                      display: "block",
+                    }}
+                  />
+                </div>
               </div>
             )}
 
-            {/* NotebookLM Two-Host Podcast Audio Overview */}
+            {/* ── Audio — large player with transcript ── */}
             {planResult.multimodal_outcomes.audio_url && (
               <div style={{
-                padding: "1.25rem",
-                borderRadius: "var(--radius-sm)",
-                backgroundColor: "oklch(14% 0.025 260 / 0.5)",
-                border: "1px solid var(--border-subtle)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.75rem",
+                padding: "1.5rem",
+                borderRadius: "var(--radius-md)",
+                backgroundColor: "oklch(14% 0.025 260 / 0.6)",
+                border: "1px solid oklch(62% 0.22 240 / 0.25)",
+                boxShadow: "0 2px 16px oklch(0% 0 0 / 0.3)",
               }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--accent-primary)", margin: 0 }}>
-                    🎙️ NotebookLM Podcast Audio Overview
-                  </p>
-                  <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", backgroundColor: "oklch(62% 0.22 240 / 0.1)", padding: "0.2rem 0.5rem", borderRadius: "10px", fontWeight: 600 }}>
-                    Two-Host AI Dialogue
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span style={{ fontSize: "1.2rem" }}>🎙️</span>
+                    <p style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--accent-primary)", margin: 0 }}>
+                      AI Podcast Overview
+                    </p>
+                  </div>
+                  <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", backgroundColor: "oklch(62% 0.22 240 / 0.12)", padding: "0.25rem 0.65rem", borderRadius: "12px", fontWeight: 600 }}>
+                    Chirp HD · Two-Host Dialogue
                   </span>
                 </div>
-                
                 <audio
                   controls
                   src={`/api/v1/multimodal/notebooklm/audio?summary=${encodeURIComponent(getDecisionSummary())}`}
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", height: "54px", borderRadius: "var(--radius-sm)" }}
                 />
-
                 {loadingDialogue && (
-                  <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", textAlign: "center", padding: "0.5rem" }}>
-                    Generating dialogue transcript...
-                  </div>
+                  <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", textAlign: "center", marginTop: "0.75rem" }}>
+                    ⏳ Generating transcript...
+                  </p>
                 )}
-
                 {dialogue && (
                   <div style={{
+                    marginTop: "1rem",
+                    maxHeight: "240px",
+                    overflowY: "auto",
                     display: "flex",
                     flexDirection: "column",
-                    gap: "0.6rem",
-                    maxHeight: "180px",
-                    overflowY: "auto",
-                    padding: "0.6rem",
+                    gap: "0.7rem",
+                    padding: "0.75rem",
                     backgroundColor: "var(--bg-canvas)",
-                    borderRadius: "var(--radius-xs)",
+                    borderRadius: "var(--radius-sm)",
                     border: "1px solid var(--border-subtle)",
-                    marginTop: "0.25rem"
                   }}>
                     {dialogue.map((turn, i) => (
-                      <div key={i} style={{ fontSize: "0.75rem", lineHeight: 1.35 }}>
+                      <div key={i} style={{ fontSize: "0.8rem", lineHeight: 1.45 }}>
                         <span style={{
                           fontWeight: 700,
                           color: turn.host.includes("Emma") ? "var(--accent-teal)" : "var(--accent-primary)",
-                          marginRight: "0.4rem"
+                          marginRight: "0.4rem",
                         }}>
                           {turn.host}:
                         </span>
-                        <span style={{ color: "var(--text-secondary)" }}>
-                          {turn.text}
-                        </span>
+                        <span style={{ color: "var(--text-secondary)" }}>{turn.text}</span>
                       </div>
                     ))}
                   </div>
@@ -452,25 +466,39 @@ export default function PlanSection({
               </div>
             )}
 
-            {/* Veo Generated Video */}
+            {/* ── Veo Video — large player ── */}
             {planResult.multimodal_outcomes.video_url && (
               <div>
-                <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.5rem" }}>
-                  🎥 Veo Dynamic Outcome Preview (3D Simulation)
-                </p>
-                <video
-                  controls
-                  src={`/api/v1/multimodal/video?summary=${encodeURIComponent(getDecisionSummary())}`}
-                  style={{
-                    width: "100%",
-                    maxHeight: "260px",
-                    borderRadius: "var(--radius-sm)",
-                    border: "1px solid var(--border-subtle)",
-                    backgroundColor: "oklch(10% 0.02 260)",
-                  }}
-                />
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
+                  <span style={{ fontSize: "1rem" }}>🎥</span>
+                  <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--accent-teal)", margin: 0 }}>
+                    Veo 2 — Plan Outcome Preview
+                  </p>
+                  <span style={{ fontSize: "0.68rem", color: "var(--text-muted)", backgroundColor: "oklch(68% 0.18 185 / 0.1)", padding: "0.15rem 0.5rem", borderRadius: "10px", fontWeight: 600 }}>
+                    Vertex AI · Generative Video
+                  </span>
+                </div>
+                <div style={{
+                  borderRadius: "var(--radius-md)",
+                  overflow: "hidden",
+                  border: "1px solid oklch(68% 0.18 185 / 0.3)",
+                  backgroundColor: "oklch(10% 0.02 260)",
+                  boxShadow: "0 4px 24px oklch(0% 0 0 / 0.5)",
+                }}>
+                  <video
+                    controls
+                    src={`/api/v1/multimodal/video?summary=${encodeURIComponent(getDecisionSummary())}`}
+                    style={{
+                      width: "100%",
+                      height: "380px",
+                      objectFit: "contain",
+                      display: "block",
+                    }}
+                  />
+                </div>
               </div>
             )}
+
           </div>
         </div>
       )}
