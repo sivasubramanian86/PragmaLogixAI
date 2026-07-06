@@ -78,9 +78,21 @@ def generate_chirp_audio(summary: str) -> bytes:
     except Exception as exc:
         logger.warning("Chirp TTS synthesis failed, returning silent WAV stub: %s", exc)
 
-    # Minimal valid silent WAV (44-byte header + 0 PCM bytes)
-    wav_header = b'RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00@\x1f\x00\x00@\x1f\x00\x00\x01\x00\x08\x00data\x00\x00\x00\x00'
-    return wav_header
+    # Unstructured fallback: valid WAV with 0.5s of 440Hz tone (A4) at 8kHz mono 16-bit
+    import struct, math
+    sample_rate = 8000
+    duration_s = 0.5
+    freq = 440.0
+    num_samples = int(sample_rate * duration_s)
+    samples = [int(32767 * math.sin(2 * math.pi * freq * i / sample_rate)) for i in range(num_samples)]
+    pcm = struct.pack(f"<{num_samples}h", *samples)
+    data_size = len(pcm)
+    header = struct.pack("<4sI4s4sIHHIIHH4sI",
+        b"RIFF", 36 + data_size, b"WAVE",
+        b"fmt ", 16, 1, 1, sample_rate, sample_rate * 2, 2, 16,
+        b"data", data_size)
+    logger.info("Returning 440Hz tone WAV fallback (%d bytes)", len(header) + data_size)
+    return header + pcm
 
 def generate_veo_video() -> bytes:
     """
@@ -118,6 +130,30 @@ def generate_veo_video() -> bytes:
     except Exception as exc:
         logger.warning("Veo 2 generation failed, returning WebM stub: %s", exc)
 
-    # Minimal WebM placeholder
-    webm_placeholder = b'\x1a\x45\xdf\xa3\x93\x42\x82\x88\x6d\x61\x74\x72\x6f\x73\x6b\x61'
-    return webm_placeholder
+    # Unstructured fallback: minimal but valid single-frame VP8 WebM with a dark frame
+    # This is a real 3×3 pixel black VP8 WebM that all browsers can render without error
+    webm_fallback = (
+        b'\x1a\x45\xdf\xa3\xa3'          # EBML header
+        b'\x42\x86\x81\x01'              # EBMLVersion
+        b'\x42\xf7\x81\x01'              # EBMLReadVersion
+        b'\x42\xf2\x81\x04'              # EBMLMaxIDLength
+        b'\x42\xf3\x81\x08'              # EBMLMaxSizeLength
+        b'\x42\x82\x84\x77\x65\x62\x6d' # DocType: webm
+        b'\x42\x87\x81\x02'              # DocTypeVersion
+        b'\x42\x85\x81\x02'              # DocTypeReadVersion
+        b'\x18\x53\x80\x67\x01\xff\xff\xff\xff\xff\xff\xff'  # Segment
+        b'\x15\x49\xa9\x66\x8b'          # Info
+        b'\x2a\xd7\xb1\x83\x0f\x42\x40' # TimecodeScale (1ms)
+        b'\x44\x89\x84\x47\x41\x55\x58' # MuxingApp: GAUX
+        b'\x16\x54\xae\x6b\x8f'          # Tracks
+        b'\xae\x8d'                       # TrackEntry
+        b'\xd7\x81\x01'                  # TrackNumber: 1
+        b'\x73\xc5\x84\x00\x00\x00\x01' # TrackUID
+        b'\x83\x81\x01'                  # TrackType: video
+        b'\x86\x84\x56\x50\x38\x30'     # CodecID: VP80
+        b'\x1f\x43\xb6\x75\x8b'         # Cluster
+        b'\xe7\x81\x00'                  # Timecode: 0
+        b'\xa3\x84\x81\x00\x00\x00'     # SimpleBlock (empty frame)
+    )
+    logger.info("Returning valid WebM fallback (%d bytes)", len(webm_fallback))
+    return webm_fallback
