@@ -3,6 +3,8 @@ import type { PlanResult } from "../lib/types";
 import type { Strings } from "../lib/translations";
 import MetricDashboard from "./MetricDashboard";
 
+const BACKEND = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+
 interface PlanSectionProps {
   t: Strings;
   activeTab: number;
@@ -35,7 +37,7 @@ export default function PlanSection({
       setLoadingDialogue(true);
       setDialogue(null);
       const summaryText = getDecisionSummary();
-      fetch(`/api/v1/multimodal/notebooklm/dialogue?summary=${encodeURIComponent(summaryText)}`)
+      fetch(`${BACKEND}/api/v1/multimodal/notebooklm/dialogue?summary=${encodeURIComponent(summaryText)}`)
         .then(res => res.json())
         .then(data => {
           setDialogue(data);
@@ -393,7 +395,7 @@ export default function PlanSection({
                   boxShadow: "0 4px 24px oklch(0% 0 0 / 0.5)",
                 }}>
                   <img
-                    src={planResult.multimodal_outcomes.image_url}
+                    src={`${BACKEND}${planResult.multimodal_outcomes.image_url}`}
                     alt="Imagen 3 Decision Diagram"
                     style={{
                       width: "100%",
@@ -428,7 +430,7 @@ export default function PlanSection({
                 </div>
                 <audio
                   controls
-                  src={`/api/v1/multimodal/notebooklm/audio?summary=${encodeURIComponent(getDecisionSummary())}`}
+                  src={`${BACKEND}/api/v1/multimodal/notebooklm/audio?summary=${encodeURIComponent(getDecisionSummary())}`}
                   style={{ width: "100%", height: "54px", borderRadius: "var(--radius-sm)" }}
                 />
                 {loadingDialogue && (
@@ -487,7 +489,7 @@ export default function PlanSection({
                 }}>
                   <video
                     controls
-                    src={`/api/v1/multimodal/video?summary=${encodeURIComponent(getDecisionSummary())}`}
+                    src={`${BACKEND}/api/v1/multimodal/video`}
                     style={{
                       width: "100%",
                       height: "380px",

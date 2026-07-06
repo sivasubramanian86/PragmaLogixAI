@@ -177,21 +177,24 @@ export default function UploadSection({
               <img
                 src={previewUrl}
                 alt="Selected signal preview"
-                style={{ maxWidth: "100%", maxHeight: "120px", borderRadius: "var(--radius-xs)", objectFit: "contain" }}
+                style={{ maxWidth: "100%", maxHeight: "320px", borderRadius: "var(--radius-sm)", objectFit: "contain", border: "1px solid var(--border-subtle)" }}
               />
             )}
             {file.type.startsWith("audio/") && (
-              <audio
-                src={previewUrl}
-                controls
-                style={{ width: "100%" }}
-              />
+              <div style={{ width: "100%", padding: "0.75rem", backgroundColor: "oklch(14% 0.025 260 / 0.8)", borderRadius: "var(--radius-sm)", border: "1px solid var(--accent-primary)" }}>
+                <p style={{ fontSize: "0.72rem", color: "var(--accent-primary)", fontWeight: 700, marginBottom: "0.5rem" }}>🎵 {file.name}</p>
+                <audio
+                  src={previewUrl}
+                  controls
+                  style={{ width: "100%", height: "48px" }}
+                />
+              </div>
             )}
             {file.type.startsWith("video/") && (
               <video
                 src={previewUrl}
                 controls
-                style={{ width: "100%", maxHeight: "120px", borderRadius: "var(--radius-xs)" }}
+                style={{ width: "100%", maxHeight: "320px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-subtle)", backgroundColor: "oklch(10% 0.02 260)" }}
               />
             )}
           </div>
