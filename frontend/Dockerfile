@@ -28,6 +28,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ARG NEXT_PUBLIC_API_BASE_URL
 ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
 
+RUN chmod -R +x node_modules/.bin || true
 RUN npm run build
 
 # ── Stage 3: Minimal runtime ────────────────────────────────────────────────
