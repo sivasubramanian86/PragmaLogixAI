@@ -35,8 +35,6 @@ import { vi } from './i18n/vi';
 import { th } from './i18n/th';
 import { id } from './i18n/id';
 
-// Suppress unused-type warning — AgeGroup is referenced via Strings interface
-void (undefined as unknown as AgeGroup);
 
 const languageNames: Record<Language, string> = {
   en: "English",
