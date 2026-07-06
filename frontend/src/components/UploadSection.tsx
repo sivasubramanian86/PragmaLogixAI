@@ -60,7 +60,7 @@ export default function UploadSection({
       } else if (type === "audio") {
         sampleFile = await fetchSampleFile("/samples/sample_voice_log.wav", "sample_voice_log.wav", "audio/wav");
       } else {
-        sampleFile = await fetchSampleFile("/samples/sample_focus_clip.mp4", "sample_focus_clip.mp4", "video/mp4");
+        sampleFile = await fetchSampleFile("/samples/sample_home_logistics.mp4", "sample_home_logistics.mp4", "video/mp4");
       }
       setFile(sampleFile);
       const fileInput = document.getElementById("file-upload") as HTMLInputElement;
