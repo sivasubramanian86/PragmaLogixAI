@@ -88,7 +88,7 @@ async def summarize_context(
         else:
             # Legacy mock client path (unit tests)
             response = model.models.generate_content(
-                model="gemini-2.5-flash-lite-preview-06-17",
+                model="gemini-2.5-flash",
                 contents=contents,
             )
             raw_text = response.text

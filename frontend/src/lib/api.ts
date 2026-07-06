@@ -11,7 +11,7 @@
 
 import type { AgeGroup, Journey, PlanResult, IngestResult } from './types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+const API_BASE = typeof window === "undefined" ? (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080") : "";
 
 // ── Helper ────────────────────────────────────────────────────────────────
 

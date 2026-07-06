@@ -12,6 +12,11 @@ interface PlanSectionProps {
   onSelectSuggestion: (query: string) => void;
 }
 
+interface DialogueTurn {
+  host: string;
+  text: string;
+}
+
 export default function PlanSection({
   t,
   activeTab,
@@ -22,13 +27,41 @@ export default function PlanSection({
 }: PlanSectionProps) {
   const isDone = pipelineState === "done" && planResult;
 
-  // Render the rich metrics dashboard if no plan is generated yet
+  const [dialogue, setDialogue] = React.useState<DialogueTurn[] | null>(null);
+  const [loadingDialogue, setLoadingDialogue] = React.useState(false);
+
+  React.useEffect(() => {
+    if (planResult) {
+      setLoadingDialogue(true);
+      setDialogue(null);
+      const summaryText = getDecisionSummary();
+      fetch(`/api/v1/multimodal/notebooklm/dialogue?summary=${encodeURIComponent(summaryText)}`)
+        .then(res => res.json())
+        .then(data => {
+          setDialogue(data);
+          setLoadingDialogue(false);
+        })
+        .catch(err => {
+          console.error("Failed to load dialogue script:", err);
+          setLoadingDialogue(false);
+        });
+    }
+  }, [planResult, activeTab]);
+
+  // Render a clean onboarding card if no plan is generated yet
   if (!isDone) {
     return (
-      <MetricDashboard
-        onSelectSuggestion={onSelectSuggestion}
-        isSimpleMode={isSimpleMode}
-      />
+      <div style={{ padding: "2rem", textAlign: "center", border: "1px dashed var(--border-subtle)", borderRadius: "var(--radius-sm)", backgroundColor: "oklch(14% 0.025 260 / 0.3)" }}>
+        <p style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.5rem" }}>
+          {t.awaitingSignal}
+        </p>
+        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", maxWidth: "320px", margin: "0 auto 1.5rem", lineHeight: 1.4 }}>
+          {t.awaitingDesc}
+        </p>
+        <div style={{ display: "inline-block", padding: "0.4rem 0.8rem", borderRadius: "20px", backgroundColor: "oklch(68% 0.18 185 / 0.1)", border: "1px solid oklch(68% 0.18 185 / 0.2)", fontSize: "0.75rem", color: "var(--accent-teal)", fontWeight: 600 }}>
+          💡 {t.generateFirst}
+        </div>
+      </div>
     );
   }
 
@@ -355,17 +388,67 @@ export default function PlanSection({
               </div>
             )}
 
-            {/* Chirp / TTS Audio Summary */}
+            {/* NotebookLM Two-Host Podcast Audio Overview */}
             {planResult.multimodal_outcomes.audio_url && (
-              <div>
-                <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.5rem" }}>
-                  🎙️ Chirp Generated Voice-over Summary
-                </p>
+              <div style={{
+                padding: "1.25rem",
+                borderRadius: "var(--radius-sm)",
+                backgroundColor: "oklch(14% 0.025 260 / 0.5)",
+                border: "1px solid var(--border-subtle)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.75rem",
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--accent-primary)", margin: 0 }}>
+                    🎙️ NotebookLM Podcast Audio Overview
+                  </p>
+                  <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", backgroundColor: "oklch(62% 0.22 240 / 0.1)", padding: "0.2rem 0.5rem", borderRadius: "10px", fontWeight: 600 }}>
+                    Two-Host AI Dialogue
+                  </span>
+                </div>
+                
                 <audio
                   controls
-                  src={planResult.multimodal_outcomes.audio_url}
+                  src={`/api/v1/multimodal/notebooklm/audio?summary=${encodeURIComponent(getDecisionSummary())}`}
                   style={{ width: "100%" }}
                 />
+
+                {loadingDialogue && (
+                  <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", textAlign: "center", padding: "0.5rem" }}>
+                    Generating dialogue transcript...
+                  </div>
+                )}
+
+                {dialogue && (
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.6rem",
+                    maxHeight: "180px",
+                    overflowY: "auto",
+                    padding: "0.6rem",
+                    backgroundColor: "var(--bg-canvas)",
+                    borderRadius: "var(--radius-xs)",
+                    border: "1px solid var(--border-subtle)",
+                    marginTop: "0.25rem"
+                  }}>
+                    {dialogue.map((turn, i) => (
+                      <div key={i} style={{ fontSize: "0.75rem", lineHeight: 1.35 }}>
+                        <span style={{
+                          fontWeight: 700,
+                          color: turn.host.includes("Emma") ? "var(--accent-teal)" : "var(--accent-primary)",
+                          marginRight: "0.4rem"
+                        }}>
+                          {turn.host}:
+                        </span>
+                        <span style={{ color: "var(--text-secondary)" }}>
+                          {turn.text}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -377,7 +460,7 @@ export default function PlanSection({
                 </p>
                 <video
                   controls
-                  src={planResult.multimodal_outcomes.video_url}
+                  src={`/api/v1/multimodal/video?summary=${encodeURIComponent(getDecisionSummary())}`}
                   style={{
                     width: "100%",
                     maxHeight: "260px",

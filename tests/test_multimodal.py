@@ -101,3 +101,21 @@ def test_generate_imagen_diagram_fallback_returns_svg():
 
     assert b"<svg" in result
     assert b"DECISION PATH OPTIMISED" in result
+
+
+def test_notebooklm_dialogue_endpoint():
+    """GET /api/v1/multimodal/notebooklm/dialogue returns JSON list of dialogue script."""
+    response = client.get("/api/v1/multimodal/notebooklm/dialogue?summary=test+plan+summary")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    assert len(response.json()) > 0
+    assert "host" in response.json()[0]
+    assert "text" in response.json()[0]
+
+
+def test_notebooklm_audio_endpoint():
+    """GET /api/v1/multimodal/notebooklm/audio returns WAV audio content."""
+    response = client.get("/api/v1/multimodal/notebooklm/audio?summary=test+plan+summary")
+    assert response.status_code == 200
+    assert "audio/wav" in response.headers["content-type"]
+    assert response.content[:4] == b"RIFF"

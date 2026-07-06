@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 # System prompt for multimodal entity extraction (kept short — token-efficient)
 # ---------------------------------------------------------------------------
 INGESTION_PROMPT = """You are an expert entity extraction assistant for a Life Decision Intelligence OS.
-Parse the user's input (text, audio transcript, image, or video description) and extract:
+Parse the user's input (direct text, image, audio, or video media) and extract:
 1. Nodes — core life entities (label: Habit | Pain | Event | Outcome | Task).
 2. Edges — how entities relate (TRIGGERS | LEADS_TO | IMPACTS | BLOCKS).
 3. Events — quantitative logs (category: HEALTH | MIND | FINANCE | LOGISTICS).
@@ -104,7 +104,8 @@ async def _write_events_to_bigquery(
         from datetime import datetime, timezone
         from google.cloud import bigquery
 
-        project = os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_GCP_PROJECT")
+        from PragmaLogixAI.backend.app.services.vertex_client import get_gcp_project
+        project = get_gcp_project()
         dataset = os.environ.get("BIGQUERY_DATASET", "pragmalogix")
         table_id = f"{project}.{dataset}.life_events"
 
@@ -170,10 +171,38 @@ async def ingest_multimodal_signal(
     # 2. Resolve the model (prefer injected client for tests)
     model = gemini_client or _build_vertex_gemini_client()
 
-    contents = [
-        INGESTION_PROMPT,
-        f"Input Signal: {file_path} (MIME: {mime_type})",
-    ]
+    contents = [INGESTION_PROMPT]
+    media_part = None
+
+    if mime_type.startswith("text/") and file_bytes:
+        try:
+            text_content = file_bytes.decode("utf-8", errors="replace")
+            contents.append(f"Input Signal: {text_content} (MIME: {mime_type})")
+            logger.info("Ingested text signal directly as string content.")
+        except Exception as exc:
+            logger.warning("Could not decode text file as UTF-8: %s", exc)
+            contents.append(f"Input Signal: {file_path} (MIME: {mime_type})")
+    else:
+        if file_path.startswith("gs://"):
+            try:
+                from vertexai.generative_models import Part
+                media_part = Part.from_uri(uri=file_path, mime_type=mime_type)
+                contents.append(media_part)
+                logger.info("Constructed Part.from_uri for Gemini model: %s", file_path)
+            except Exception as exc:
+                logger.warning("Failed to construct Part.from_uri: %s", exc)
+        
+        if media_part is None and file_bytes:
+            try:
+                from vertexai.generative_models import Part
+                media_part = Part.from_data(data=file_bytes, mime_type=mime_type)
+                contents.append(media_part)
+                logger.info("Constructed Part.from_data for Gemini model from raw bytes.")
+            except Exception as exc:
+                logger.warning("Failed to construct Part.from_data: %s", exc)
+
+        if media_part is None:
+            contents.append(f"Input Signal: {file_path} (MIME: {mime_type})")
 
     try:
         if hasattr(model, "generate_content"):
@@ -183,7 +212,7 @@ async def ingest_multimodal_signal(
         else:
             # Legacy google-genai mock path (unit tests)
             response = model.models.generate_content(
-                model="gemini-2.5-flash-lite-preview-06-17",
+                model="gemini-2.5-flash",
                 contents=contents,
             )
             raw_text = response.text

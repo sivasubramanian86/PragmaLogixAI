@@ -11,3 +11,7 @@ def disable_live_vertex_models(monkeypatch: pytest.MonkeyPatch) -> None:
         "PragmaLogixAI.agents.base_agent.ADKBaseAgent._get_model",
         lambda self: None,
     )
+    monkeypatch.setattr(
+        "PragmaLogixAI.agents.coordinator_agent.CoordinatorAgent._get_pro_model",
+        lambda self: None,
+    )

@@ -87,13 +87,76 @@ class ADKBaseAgent:
                 return response.text.strip()
             # Legacy mock path
             response = model.models.generate_content(
-                model="gemini-2.5-flash-lite-preview-06-17",
+                model="gemini-2.5-flash",
                 contents=[prompt],
             )
             return response.text.strip()
         except Exception as exc:
             logger.warning("%s: model call failed — %s", self.name, exc)
             return ""
+
+    async def execute_tools(self, input_data: Dict[str, Any]) -> str:
+        """Execute registered tools to collect grounding context.
+
+        Args:
+            input_data: Dict containing query, user_id, journey etc.
+
+        Returns:
+            A formatted string of tool findings.
+        """
+        if not self.tools:
+            return ""
+
+        findings_list = []
+        
+        category_map = {
+            "HealthEnergyAgent": "HEALTH",
+            "FinanceWorkAgent": "FINANCE",
+            "MindFocusAgent": "MIND",
+            "LogisticsHomeAgent": "LOGISTICS"
+        }
+        category = category_map.get(self.name, "HEALTH")
+        user_id = input_data.get("user_id", "default_user")
+        query = input_data.get("query", "")
+
+        for tool_name in self.tools:
+            if tool_name == "graph_rag_tool":
+                try:
+                    from PragmaLogixAI.backend.app.db import create_db_engine
+                    from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+                    from PragmaLogixAI.agents.tools import graph_rag_tool
+
+                    engine = create_db_engine()
+                    session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+                    async with session_factory() as session:
+                        model = self._get_model()
+                        subgraph_context = await graph_rag_tool(
+                            query=query,
+                            db_session=session,
+                            gemini_client=model
+                        )
+                        if subgraph_context:
+                            findings_list.append(subgraph_context)
+                except Exception as exc:
+                    logger.warning("%s: Failed to execute graph_rag_tool: %s", self.name, exc)
+
+            elif tool_name == "bigquery_metrics_tool":
+                try:
+                    from PragmaLogixAI.agents.tools import bigquery_metrics_tool
+                    metrics_context = await bigquery_metrics_tool(
+                        user_id=user_id,
+                        category=category,
+                        days=30
+                    )
+                    if metrics_context:
+                        findings_list.append(metrics_context)
+                except Exception as exc:
+                    logger.warning("%s: Failed to execute bigquery_metrics_tool: %s", self.name, exc)
+
+        if not findings_list:
+            return ""
+
+        return "\n\n=== GROUNDING TOOL DATA ===\n" + "\n\n".join(findings_list) + "\n===========================\n"
 
     async def run(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
         """Execute the agent and return a standard result dict.

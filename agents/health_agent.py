@@ -50,7 +50,12 @@ class HealthAgent(ADKBaseAgent):
             )
 
         # Attempt Vertex AI Flash-Lite call for richer, context-aware findings
-        user_context = f"Age group: {age_group}. Query: {query}. Journey: {input_data.get('journey', 'tomorrow')}."
+        grounding_context = await self.execute_tools(input_data)
+        user_context = (
+            f"Age group: {age_group}. Query: {query}. "
+            f"Journey: {input_data.get('journey', 'tomorrow')}.\n"
+            f"{grounding_context}"
+        )
         llm_findings = await self._call_model(
             user_context=user_context,
             extra_instruction="Focus only on physical health, sleep quality, and energy management.",

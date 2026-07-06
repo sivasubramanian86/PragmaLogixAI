@@ -1,0 +1,30 @@
+import type { Strings } from "./strings";
+import { en } from "./en";
+
+export const kn: Strings = {
+  ...en,
+  title: "PragmaLogixAI", subtitle: "ಜೀವನ ನಿರ್ಧಾರ OS",
+  uploadSignal: "ಜೀವನ ಸಂಕೇತ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ", uploadHelp: "ಧ್ವನಿ ಟಿಪ್ಪಣಿ, ಇನ್‌ವಾಯ್ಸ್ ಅಥವಾ ಪ್ರಾಜೆಕ್ಟ್ ಪಟ್ಟಿ ಸಲ್ಲಿಸಿ",
+  ingestSignalHeader: "ಜೀವನ ಸಂಕೇತವನ್ನು ಇಂಜೆಸ್ಟ್ ಮಾಡಿ", ingestionLogs: "ಇಂಜೆಶನ್ ಲಾಗ್‌ಗಳು",
+  ingestSummary: "ಜೀವನ ಸಂಕೇತ ಪ್ರಕ್ರಿಯಾಗೊಂಡಿದೆ", extractedNodes: "ತೆಗೆದ ನೋಡ್‌ಗಳು:", extractedEdges: "ತೆಗೆದ ಅಂಚುಗಳು:", extractedEvents: "ತೆಗೆದ ಈವೆಂಟ್‌ಗಳು:",
+  tomorrowPlan: "ದೈನಂದಿನ ಶಕ್ತಿ & ಫೋಕಸ್ ಪ್ರಯಾಣ", frictionBudget: "ಹಣಕಾಸು & ಗಮನ ಬಜೆಟ್ ಪ್ರಯಾಣ", logisticsRadar: "ಪರಿಸರ & ದಿನಚರಿ ರಾಡಾರ್",
+  generatePlan: "ಯೋಜನೆ ರಚಿಸಿ", activeSubscriptions: "ಸಕ್ರಿಯ ಚಂದಾದಾರಿಕೆಗಳು", hourlySchedule: "ಗಂಟೆ ವೇಳಾಪಟ್ಟಿ",
+  frictionActions: "ಘರ್ಷಣೆ ತಡೆ ಕ್ರಮಗಳು", lifeDiffs: "ಜೀವನ ವ್ಯತ್ಯಾಸಗಳು", lintWarnings: "ಯೋಜನೆ ಪರೀಕ್ಷೆಗಳು", profileLabel: "ಪ್ರೊಫೈಲ್ ಆಯ್ಕೆಮಾಡಿ",
+  profiles: { student: "ಮಕ್ಕಳ / ವಿದ್ಯಾರ್ಥಿ", adult: "ಕೆಲಸ ಮಾಡುವ ವೃತ್ತಿಪರ", senior: "ಹಿರಿಯ / ನಿವೃತ್ತ" },
+  nav: { dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್", features: "ಸಾಮರ್ಥ್ಯಗಳು", about: "ವಾಸ್ತುಶಿಲ್ಪ", faq: "FAQ", help: "ಬಳಕೆದಾರ ಮಾರ್ಗದರ್ಶಿ", settings: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು" },
+  workspace: "ಕಾರ್ಯಸ್ಥಳ", activeProfile: "ಸಕ್ರಿಯ ಪ್ರೊಫೈಲ್", decisionOS: "ನಿರ್ಧಾರ ಓಎಸ್:", meshState: "ನೆಟ್‌ವರ್ಕ್ ಸ್ಥಿತಿ:", online: "ಆನ್‌ಲೈನ್", agentMeshPipeline: "ಎಜೆಂಟ್ ಮೆಶ್ ಪೈಪ್‌ಲೈನ್",
+  systemDashboard: "ಸಿಸ್ಟಮ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್", journeyPlanOutcome: "ಪ್ರಯಾಣ ಯೋಜನೆ & ಫಲಿತಾಂಶ", decisionTemplates: "ನಿರ್ಧಾರ ಟೆಂಪ್ಲೇಟ್‌ಗಳು",
+  templatesDesc: "ಎಜೆಂಟ್ ಫಲಿತಾಂಶಗಳನ್ನು ಸಂಶ್ಲೇಷಿಸಲು ಜೀವನ ನಿರ್ಧಾರ ಟೆಂಪ್ಲೇಟ್ ಆಯ್ಕೆಮಾಡಿ.",
+  generatedFor: "ಉತ್ಪಾದಿಸಲಾಗಿದೆ", awaitingSignal: "ಜೀವನ ಸಂಕೇತ ನಿರೀಕ್ಷಿಸಲಾಗುತ್ತಿದೆ", awaitingDesc: "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಹೊಂದಿಸಿ, ಜೀವನ ಸಂಕೇತ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ, ನಂತರ ಯೋಜನೆ ರಚಿಸಿ ಕ್ಲಿಕ್ ಮಾಡಿ.",
+  runningPipeline: "ಎಜೆಂಟ್ ಮೆಶ್ ಪ್ರಕ್ರಿಯೆ...", generateFirst: "ಪೈಪ್‌ಲೈನ್ ಪ್ರಾರಂಭಿಸಲು ಯೋಜನೆ ರಚಿಸಿ ಗೆ ಹೋಗಿ.",
+  notebookSummary: "NotebookLM ಪಾಡ್‌ಕ್ಯಾಸ್ಟ್ ಸಂಭಾಷಣೆ", loadingDialogue: "ಸಂಭಾಷಣೆ ಸ್ಕ್ರಿಪ್ಟ್ ರಚಿಸಲಾಗುತ್ತಿದೆ...",
+  dashboardTitle: "ಸಿಸ್ಟಮ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್", cognitiveClarity: "ಜ್ಞಾನ ಸ್ಪಷ್ಟತೆ ಸೂಚ್ಯಂಕ", dailyEnergy: "ದೈನಂದಿನ ಶಕ್ತಿ ಸ್ಕೋರ್",
+  financialLeaks: "ಲೆಕ್ಕ ಪರಿಶೋಧಿತ ಹಣಕಾಸು ಸೋರಿಕೆ", routineFriction: "ದಿನಚರಿ ಲಾಜಿಸ್ಟಿಕ್ಸ್ ಘರ್ಷಣೆ",
+  activeKnowledgeGraph: "ಸಕ್ರಿಯ ಜ್ಞಾನ ಗ್ರಾಫ್", tacticalNodes: "ಕಾರ್ಯತಂತ್ರ ಘಟಕಗಳು (ನೋಡ್‌ಗಳು)", monitoredEdges: "ಮೇಲ್ವಿಚಾರಣೆ ಸಂಬಂಧಗಳು (ಅಂಚುಗಳು)",
+  graphRAGLatency: "GraphRAG ತಡ", recentDecisionLog: "ಇತ್ತೀಚಿನ ನಿರ್ಧಾರ ಲಾಗ್",
+  confusingYou: "ಈಗ ನಿಮ್ಮನ್ನು ಗೊಂದಲಕ್ಕೆ ತಳ್ಳುತ್ತಿರುವುದೇನು?",
+  selectTemplate: "ಯೋಜನಾ ಸಿಮ್ಯುಲೇಶನ್ ಚಲಾಯಿಸಲು ಕೆಳಗೆ ಟೆಂಪ್ಲೇಟ್ ಆಯ್ಕೆಮಾಡಿ:",
+  tpl1: "ನನಗೆ ಮಧ್ಯಾಹ್ನ ಕೆಲಸದ ಆಯಾಸ ಇದೆ. ನನ್ನ ಆಳವಾದ ಕೆಲಸ ಅನ್ನು ಅನುಕೂಲಿಸಿ.",
+  tpl2: "ಮಾಸಿಕ ಚಂದಾ ಘರ್ಷಣೆ ಲೆಕ್ಕ ಪರಿಶೋಧಿಸಿ ಮತ್ತು ಸ್ಕ್ರೀನ್ ಸಮಯ ಸೋರಿಕೆ ಪರಿಶೀಲಿಸಿ.",
+  tpl3: "ಮನೆ ಲಾಜಿಸ್ಟಿಕ್ಸ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಮನೆ ಫಿಲ್ಟರ್ ರಿಪೇರಿ ಶೆಡ್ಯೂಲ್ ಮಾಡಿ.",
+};

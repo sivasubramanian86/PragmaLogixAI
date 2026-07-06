@@ -1,0 +1,30 @@
+import type { Strings } from "./strings";
+import { en } from "./en";
+
+export const te: Strings = {
+  ...en,
+  title: "PragmaLogixAI", subtitle: "జీవిత నిర్ణయ OS",
+  uploadSignal: "జీవిత సంకేతం అప్‌లోడ్ చేయండి", uploadHelp: "వాయిస్ నోట్, ఇన్‌వాయిస్ లేదా చెక్‌లిస్ట్ సమర్పించండి",
+  ingestSignalHeader: "జీవిత సంకేతాన్ని ఇంజెస్ట్ చేయండి", ingestionLogs: "ఇంజెషన్ లాగ్‌లు",
+  ingestSummary: "జీవిత సంకేతం ప్రాసెస్ చేయబడింది", extractedNodes: "వెలికితీసిన నోడ్‌లు:", extractedEdges: "వెలికితీసిన అంచులు:", extractedEvents: "వెలికితీసిన సంఘటనలు:",
+  tomorrowPlan: "రోజువారీ శక్తి & ఫోకస్ ప్రయాణం", frictionBudget: "ఆర్థిక & శ్రద్ధ బడ్జెట్ ప్రయాణం", logisticsRadar: "పర్యావరణ & నిత్య రాడార్",
+  generatePlan: "ప్లాన్ రూపొందించండి", activeSubscriptions: "యాక్టివ్ సబ్‌స్క్రిప్షన్లు", hourlySchedule: "గంటవారీ షెడ్యూల్",
+  frictionActions: "ఘర్షణ తగ్గింపు చర్యలు", lifeDiffs: "జీవిత తేడాలు", lintWarnings: "ప్లాన్ తనిఖీలు", profileLabel: "ప్రొఫైల్ ఎంచుకోండి",
+  profiles: { student: "పిల్లలు / విద్యార్థి", adult: "పని నిపుణుడు", senior: "వృద్ధులు / రిటైర్డ్" },
+  nav: { dashboard: "డాష్‌బోర్డ్", features: "సామర్థ్యాలు", about: "ఆర్కిటెక్చర్", faq: "FAQ", help: "వినియోగదారు గైడ్", settings: "సెట్టింగ్‌లు" },
+  workspace: "వర్క్‌స్పేస్", activeProfile: "యాక్టివ్ ప్రొఫైల్", decisionOS: "నిర్ణయ OS:", meshState: "నెట్‌వర్క్ స్థితి:", online: "ఆన్‌లైన్", agentMeshPipeline: "ఏజెంట్ మెష్ పైప్‌లైన్",
+  systemDashboard: "సిస్టమ్ డాష్‌బోర్డ్", journeyPlanOutcome: "ప్రయాణ ప్లాన్ & ఫలితం", decisionTemplates: "నిర్ణయ టెంప్లేట్లు",
+  templatesDesc: "ఏజెంట్ ఫలితాలను సంశ్లేషించడానికి జీవిత నిర్ణయ టెంప్లేట్ ఎంచుకోండి.",
+  generatedFor: "కోసం రూపొందించబడింది", awaitingSignal: "జీవిత సంకేతం వేచి ఉంది", awaitingDesc: "మీ ప్రొఫైల్ కాన్ఫిగర్ చేయండి, జీవిత సంకేతం అప్‌లోడ్ చేయండి, తర్వాత ప్లాన్ రూపొందించండి క్లిక్ చేయండి.",
+  runningPipeline: "ఏజెంట్ మెష్ ప్రాసెసింగ్...", generateFirst: "పైప్‌లైన్ ప్రారంభించడానికి ప్లాన్ రూపొందించండికి వెళ్ళండి.",
+  notebookSummary: "NotebookLM పాడ్‌కాస్ట్ సంభాషణ", loadingDialogue: "సంభాషణ స్క్రిప్ట్ రూపొందిస్తున్నారు...",
+  dashboardTitle: "సిస్టమ్ డాష్‌బోర్డ్", cognitiveClarity: "అభిజ్ఞా స్పష్టత సూచిక", dailyEnergy: "రోజువారీ శక్తి స్కోర్",
+  financialLeaks: "ఆడిట్ చేసిన ఆర్థిక లీకులు", routineFriction: "నిత్య లాజిస్టిక్స్ ఘర్షణ",
+  activeKnowledgeGraph: "యాక్టివ్ జ్ఞాన గ్రాఫ్", tacticalNodes: "వ్యూహాత్మక సంస్థలు (నోడ్‌లు)", monitoredEdges: "పర్యవేక్షించిన సంబంధాలు (అంచులు)",
+  graphRAGLatency: "GraphRAG గ్రౌండింగ్ జాప్యం", recentDecisionLog: "ఇటీవలి నిర్ణయ లాగ్",
+  confusingYou: "ఇప్పుడు మీకు అర్థంకానిది ఏమిటి?",
+  selectTemplate: "ప్లానింగ్ సిమ్యులేషన్ అమలు చేయడానికి జీవిత నిర్ణయ టెంప్లేట్ ఎంచుకోండి:",
+  tpl1: "నాకు మధ్యాహ్నం పని అలసట ఉంది. నా లోతైన పనిని ఆప్టిమైజ్ చేయండి.",
+  tpl2: "నెలవారీ సబ్‌స్క్రిప్షన్ ఘర్షణను ఆడిట్ చేసి స్క్రీన్ టైమ్ లీకులను తనిఖీ చేయండి.",
+  tpl3: "హోమ్ లాజిస్టిక్స్ తనిఖీ చేసి నిత్య గృహ ఫిల్టర్ మరమ్మత్తు షెడ్యూల్ చేయండి.",
+};

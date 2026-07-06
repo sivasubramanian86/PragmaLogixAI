@@ -21,6 +21,8 @@ async def lifespan(app: FastAPI):  # type: ignore[type-arg]
     """Initialise Vertex AI and DB engine once at startup; clean up on shutdown."""
     init_vertex()           # sets up GCP project + location for all model calls
     create_db_engine()      # warms the connection pool
+    from PragmaLogixAI.backend.app.db import init_db
+    await init_db()         # ensures all tables exist (development/sandbox helper)
     yield
 
 app = FastAPI(
@@ -33,12 +35,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+ALLOWED_ORIGINS = [origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "*").split(",") if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=ALLOWED_ORIGINS if "*" not in ALLOWED_ORIGINS else [],
+    allow_origin_regex="https?://.*" if "*" in ALLOWED_ORIGINS else None,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 

@@ -61,7 +61,8 @@ async def bigquery_metrics_tool(
     try:
         from google.cloud import bigquery
 
-        project = os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_GCP_PROJECT")
+        from PragmaLogixAI.backend.app.services.vertex_client import get_gcp_project
+        project = get_gcp_project()
         dataset = os.environ.get("BIGQUERY_DATASET", "pragmalogix")
         table = f"{project}.{dataset}.life_events"
 

@@ -221,16 +221,35 @@ class ParallelSpecialistsMesh:
     def __init__(self, sub_agents: List[Any]) -> None:
         self.sub_agents = sub_agents
 
-    async def run(self, input_data: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Run all specialist agents concurrently.
+    async def run(self, input_data: Dict[str, Any], active_agent_names: List[str]) -> List[Dict[str, Any]]:
+        """Run all specialist agents concurrently, skipping inactive ones.
 
         Args:
             input_data: Shared input payload forwarded to every agent.
+            active_agent_names: List of names of specialist agents to execute.
 
         Returns:
             List of agent result dicts (one per agent).
         """
-        tasks = [agent.run(input_data) for agent in self.sub_agents]
+        tasks = []
+        for agent in self.sub_agents:
+            if agent.name in active_agent_names:
+                tasks.append(agent.run(input_data))
+            else:
+                async def skipped_run(a_name: str) -> Dict[str, Any]:
+                    default_skipped_findings = {
+                        "HealthEnergyAgent": "Health: Skipped (not relevant to query).",
+                        "MindFocusAgent": "Mind: Skipped (not relevant to query).",
+                        "FinanceWorkAgent": "Finance: Skipped (not relevant to query).",
+                        "LogisticsHomeAgent": "Logistics: Skipped (not relevant to query).",
+                        "ProfessionalCareerAgent": "Professional: Skipped (not relevant to query)."
+                    }
+                    return {
+                        "agent": a_name,
+                        "status": "SKIPPED",
+                        "findings": default_skipped_findings.get(a_name, "Skipped: Agent domain not triggered by context.")
+                    }
+                tasks.append(skipped_run(agent.name))
         return await asyncio.gather(*tasks)
 
 
@@ -297,7 +316,7 @@ class CoordinatorAgent:
                 raw_text = response.text
             else:
                 response = model.models.generate_content(
-                    model="gemini-2.5-pro-preview-06-05", contents=[prompt]
+                    model="gemini-2.5-pro", contents=[prompt]
                 )
                 raw_text = response.text
 
@@ -349,11 +368,48 @@ class CoordinatorAgent:
 
         return warnings
 
+    def classify_active_agents(self, query: str) -> List[str]:
+        """Identify which agent names are active for the given query.
+        
+        If the query is generic, all agents are active.
+        """
+        q = query.lower()
+        
+        generic_keywords = [
+            "optimize", "optimise", "plan", "planning", "schedule", "routine",
+            "daily", "monthly", "tomorrow", "today", "day", "journey", "check-in", "checkin"
+        ]
+        
+        is_generic = False
+        if len(q.strip()) < 10 or any(gk in q for gk in generic_keywords):
+            is_generic = True
+            
+        domain_keywords = {
+            "HealthEnergyAgent": ["sleep", "energy", "medication", "checkup", "health", "exercise", "workout", "gym", "burnout", "wellness"],
+            "MindFocusAgent": ["focus", "screen time", "screentime", "pomodoro", "study", "cognitive", "stress", "attention", "mental"],
+            "FinanceWorkAgent": ["transaction", "pension", "pocket money", "savings", "expense", "budget", "subscription", "saas", "billing", "cost", "money", "financial", "leak"],
+            "LogisticsHomeAgent": ["chore", "grocery", "ac", "filter", "appliance", "maintenance", "house", "room", "lock", "delivery", "logistics", "home"],
+            "ProfessionalCareerAgent": ["career", "internship", "coding", "milestone", "certification", "advisory", "mentorship", "job", "professional", "work"]
+        }
+        
+        if is_generic:
+            return [agent.name for agent in self.mesh.sub_agents]
+            
+        active_names = []
+        for agent_name, keywords in domain_keywords.items():
+            if any(kw in q for kw in keywords):
+                active_names.append(agent_name)
+                
+        if not active_names:
+            return [agent.name for agent in self.mesh.sub_agents]
+            
+        return active_names
+
     async def run(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
         """Execute the full coordinator pipeline.
 
         Steps:
-        1. Run all specialist agents in parallel.
+        1. Run active specialist agents in parallel (skip inactive ones).
         2. Merge findings into a dict keyed by agent name.
         3. Synthesise a structured plan with Gemini 2.5 Pro (or deterministic fallback).
         4. Run plan linting.
@@ -370,9 +426,11 @@ class CoordinatorAgent:
         """
         age_group = input_data.get("age_group", "adult")
         journey = input_data.get("journey", "tomorrow")
+        query = input_data.get("query", "")
 
-        # 1. Parallel specialist execution
-        specialist_results = await self.mesh.run(input_data)
+        # 1. Parallel specialist execution with adaptive routing
+        active_names = self.classify_active_agents(query)
+        specialist_results = await self.mesh.run(input_data, active_names)
 
         # 2. Merge findings
         merged_reports: Dict[str, str] = {}

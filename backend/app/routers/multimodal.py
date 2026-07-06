@@ -32,6 +32,11 @@ async def get_multimodal_audio(summary: str = Query("Plan summary", description=
         headers={"Content-Disposition": "inline; filename=plan-summary.wav"},
     )
 
+from PragmaLogixAI.backend.app.services.notebooklm_generator import (
+    generate_podcast_dialogue,
+    generate_notebooklm_audio
+)
+
 @router.get("/api/v1/multimodal/video")
 async def get_multimodal_video():
     """
@@ -39,3 +44,24 @@ async def get_multimodal_video():
     """
     video_bytes = generate_veo_video()
     return Response(content=video_bytes, media_type="video/webm")
+
+@router.get("/api/v1/multimodal/notebooklm/dialogue")
+async def get_notebooklm_dialogue(summary: str = Query("Plan summary", description="Summary text for script")):
+    """
+    Generate dialogue script between Host A and Host B summarizing the plan.
+    """
+    dialogue = generate_podcast_dialogue(summary)
+    return dialogue
+
+@router.get("/api/v1/multimodal/notebooklm/audio")
+async def get_notebooklm_audio(summary: str = Query("Plan summary", description="Summary text for script")):
+    """
+    Stream synthesized two-host dialogue WAV audio file.
+    """
+    dialogue = generate_podcast_dialogue(summary)
+    audio_bytes = generate_notebooklm_audio(dialogue)
+    return Response(
+        content=audio_bytes,
+        media_type="audio/wav",
+        headers={"Content-Disposition": "inline; filename=notebooklm-podcast.wav"},
+    )
