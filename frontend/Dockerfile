@@ -45,6 +45,8 @@ RUN addgroup --system --gid 1001 nodejs && \
 # Copy standalone build output (includes server.js + minimal node_modules)
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# public/ must be copied explicitly — standalone output does NOT include it
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 USER nextjs
 EXPOSE ${PORT}
