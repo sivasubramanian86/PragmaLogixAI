@@ -36,11 +36,14 @@ service-account-key.json
 *.db
 *.sqlite
 
-# Pitch / demo materials (local only, not for repo)
+# Pitch / demo / submission materials (local only, not for repo)
 PITCH_DECK.md
 DEMO_SCRIPT.md
+SUBMISSION_DECK.md
 *_PITCH*.md
 *_DEMO*.md
+*_SUBMISSION*.md
+firebase-debug.log
 
 # IDEs
 .vscode/
