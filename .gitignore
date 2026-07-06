@@ -36,6 +36,12 @@ service-account-key.json
 *.db
 *.sqlite
 
+# Pitch / demo materials (local only, not for repo)
+PITCH_DECK.md
+DEMO_SCRIPT.md
+*_PITCH*.md
+*_DEMO*.md
+
 # IDEs
 .vscode/
 .idea/
